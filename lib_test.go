@@ -3,8 +3,11 @@ package linkchecker
 import (
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDomainBlacklistWhitelist(t *testing.T) {
@@ -122,4 +125,20 @@ func TestLivenesscheck(t *testing.T) {
 			t.Errorf("Link %s is live", link.URL)
 		}
 	}
+}
+
+func TestExtractLinks(t *testing.T) {
+	links, err := extractLinks([]string{"test-data/test.pdf"})
+	if err != nil {
+		t.Errorf("Error extracting links: %v", err)
+	}
+	sort.Slice(links, func(i, j int) bool {
+		return links[i].URL < links[j].URL
+	})
+	assert.Equal(t, len(links), 3)
+	assert.Equal(t, links, []Link{
+		{URL: "https://a.com", IsValid: false},
+		{URL: "https://b.com", IsValid: false},
+		{URL: "https://c.com", IsValid: false},
+	})
 }

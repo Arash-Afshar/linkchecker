@@ -72,7 +72,7 @@ func getPDFsFromDirectory(directory string) ([]string, error) {
 	return pdfFiles, nil
 }
 
-func extractsLinks(pdfFiles []string) ([]Link, error) {
+func extractLinks(pdfFiles []string) ([]Link, error) {
 	conf := api.LoadConfiguration()
 	allLinks := []Link{}
 
@@ -174,7 +174,7 @@ func livenesscheck(links []Link) {
 }
 
 func CheckLinks(config *Config) ([]Link, error) {
-	links, err := extractsLinks(config.Pdfs)
+	links, err := extractLinks(config.Pdfs)
 	if err != nil {
 		return nil, fmt.Errorf("error extracting links: %v", err)
 	}
